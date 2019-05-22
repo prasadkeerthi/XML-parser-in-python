@@ -1,6 +1,3 @@
-#!/usr/bin/env python
-# coding: utf-8
-
 import re
 
 class node(object):
@@ -13,7 +10,6 @@ class node(object):
         self.inval = inval    # content of the tag is stored
 
     # returns matching node in given node and its immediate children
-
     def level_search(self, node, key):
         if node.val == key:
             return node
@@ -54,18 +50,13 @@ def create_listofwords(xml):
     return listofwords
 
 # bulid the tree from given xml data
-
-
 def build_tree(xml):
-
     listofwords = create_listofwords(xml)
 
     tag = []     # stack used to keep track of opening and closing tags
     pointing_node = None  # pointer used to keep track of insertion point
     for j, i in enumerate(listofwords):
-
         if i[0] == '<' and i[1] != '/':  # if the element is opening tag
-
             if pointing_node != None:
                 temp = node(i[1:len(i)-1])
                 pointing_node.subtrees.append(temp)
