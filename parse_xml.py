@@ -1,20 +1,20 @@
 import re
 
-class node(object):
+class Node(object):
 
-    # A node with list of nodes as subtree, Single node as a parent
+    # A Node with list of Nodes as subtree, Single Node as a parent
     def __init__(self, val='', parent=None, inval=None):
-        self.val = val        # name of the node
-        self.subtrees = []    # list of subtree node objects
-        self.parent = parent  # parent of the node
+        self.val = val        # name of the Node
+        self.subtrees = []    # list of subtree Node objects
+        self.parent = parent  # parent of the Node
         self.inval = inval    # content of the tag is stored
 
-    # returns matching node in given node and its immediate children
-    def level_search(self, node, key):
-        if node.val == key:
-            return node
+    # returns matching Node in given Node and its immediate children
+    def level_search(self, Node, key):
+        if Node.val == key:
+            return Node
         else:
-            for subtree in node.subtrees:
+            for subtree in Node.subtrees:
                 if subtree.val == key:
                     return subtree
 
@@ -44,46 +44,51 @@ def create_listofwords(xml):
     # remove words consisting of only whitespaces
     while ' ' in listofwords:
         listofwords.remove('  ')
+
     if listofwords[0][0] == '<' and listofwords[0][1] == '?':
         del listofwords[0]
+
     # print('\n',listofwords)
     return listofwords
 
 # bulid the tree from given xml data
 def build_tree(xml):
+
     listofwords = create_listofwords(xml)
 
     tag = []     # stack used to keep track of opening and closing tags
-    pointing_node = None  # pointer used to keep track of insertion point
+    pointing_Node = None  # pointer used to keep track of insertion point
     for j, i in enumerate(listofwords):
-        if i[0] == '<' and i[1] != '/':  # if the element is opening tag
-            if pointing_node != None:
-                temp = node(i[1:len(i)-1])
-                pointing_node.subtrees.append(temp)
-                temp.parent = pointing_node  # adding the node to the tree
 
-                pointing_node = temp
-                tag.append(i)  # push the node on tagstack
+        if i[0] == '<' and i[1] != '/':  # if the element is opening tag
+
+            if pointing_Node != None:
+                temp = Node(i[1:len(i)-1])
+                pointing_Node.subtrees.append(temp)
+                temp.parent = pointing_Node  # adding the Node to the tree
+
+                pointing_Node = temp
+                tag.append(i)  # push the Node on tagstack
 
             else:
-                temp = node(i[1:len(i)-1])
-                pointing_node = temp
-                if pointing_node.parent != None:
-                    origin = pointing_node.parent
+                temp = Node(i[1:len(i)-1])
+                pointing_Node = temp
+                if pointing_Node.parent != None:
+                    origin = pointing_Node.parent
                 else:
-                    origin = pointing_node
+                    origin = pointing_Node
                 tag.append(i)
 
         elif i[0] == '<' and i[1] == '/':  # if the element is closing tag
             if len(tag) > 0:
-                pointing_node = pointing_node.parent  # point to the parent
+                pointing_Node = pointing_Node.parent  # point to the parent
                 tag.pop()  # pop the tagstack
 
         else:  # if the element is content of the tag
 
-            if pointing_node != None:
-                pointing_node.inval = i
-                # print(pointing_node.val,)
+            if pointing_Node != None:
+                pointing_Node.inval = i
+                # print(pointing_Node.val,)
     return origin
 
 
@@ -93,20 +98,21 @@ def search_path(pathgiven, origin):
     # split the string with '/' as a delimitor and ignore first element as it is ''
     path = pathgiven.split('/')[1:]
     pl = len(path)
-    pointing_node = origin
+    pointing_Node = origin
+    
     for index, name in enumerate(path):  # search for each word in the path
-        if index < pl and pointing_node != None:
-            if pointing_node.subtrees != []:
-                # print(pointing_node.val,name)
-                pointing_node = pointing_node.level_search(pointing_node, name)
+        if index < pl and pointing_Node != None:
+            if pointing_Node.subtrees != []:
+                # print(pointing_Node.val,name)
+                pointing_Node = pointing_Node.level_search(pointing_Node, name)
             else:
                 print('\nresult for the given query \"' +
                       pathgiven + '\" is\n'+" given path is incorrect")
                 return
 
-    if hasattr(pointing_node, 'inval'):
+    if hasattr(pointing_Node, 'inval'):
         print('\nresult for the given query \"' +
-              pathgiven + '\" is\n', pointing_node.inval)
+              pathgiven + '\" is\n', pointing_Node.inval)
     else:
         print('\nresult for the given query \"' +
               pathgiven + '\" is\n'+" given path is incorrect")
