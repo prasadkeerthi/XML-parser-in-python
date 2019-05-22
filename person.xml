@@ -1,0 +1,21 @@
+<person>
+	<name>
+Bill Smith
+	</name>
+	<address>
+		<street>
+			Dame Court
+		</street>
+
+		<city>
+			Dublin
+		</city>
+
+		<postcode>
+		</postcode>
+
+		<country>
+			Ireland
+		</country>
+	</address>
+</person>
